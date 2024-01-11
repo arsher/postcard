@@ -7,6 +7,15 @@ pub mod flavors;
 use crate::error::{Error, Result};
 use deserializer::Deserializer;
 
+/// Deserialize a message of type `T` from a byte slice in place.
+pub fn from_bytes_in_place<'a, T>(s: &'a [u8], target: &mut T) -> Result<()>
+where
+    T: Deserialize<'a>,
+{
+    let mut deserializer = Deserializer::from_bytes(s);
+    T::deserialize_in_place(&mut deserializer, target)
+}
+
 /// Deserialize a message of type `T` from a byte slice. The unused portion (if any)
 /// of the byte slice is not returned.
 pub fn from_bytes<'a, T>(s: &'a [u8]) -> Result<T>
